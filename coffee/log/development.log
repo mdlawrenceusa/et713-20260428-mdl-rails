@@ -1,0 +1,191 @@
+  [1m[35m (2.7ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY) /*application='Coffee'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='Coffee'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='Coffee'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.3ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-04-28 21:59:52.995389', '2026-04-28 21:59:52.995395') RETURNING "key" /*application='Coffee'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Coffee'*/[0m
+Migrating to CreateSuppliers (20260428215728)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[35m (2.0ms)[0m  [1m[35mCREATE TABLE "suppliers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "address" varchar, "city" varchar, "state" varchar, "email" varchar, "phone" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='Coffee'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260428215728') RETURNING "version" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+Migrating to CreateBeans (20260428215732)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[35m (1.7ms)[0m  [1m[35mCREATE TABLE "beans" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "supplier_id" integer NOT NULL, "type" varchar, "product_name" varchar, "price" decimal, "description" text, "quantity" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_6decca50b8"
+FOREIGN KEY ("supplier_id")
+  REFERENCES "suppliers" ("id")
+) /*application='Coffee'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_beans_on_supplier_id" ON "beans" ("supplier_id") /*application='Coffee'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260428215732') RETURNING "version" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Coffee'*/[0m
+[ActionDispatch::HostAuthorization::DefaultResponseApp] Blocked hosts: 98b6865d163c400f8ee565ae3f084a94.vfs.cloud9.us-east-1.amazonaws.com
+[ActionDispatch::HostAuthorization::DefaultResponseApp] Blocked hosts: 98b6865d163c400f8ee565ae3f084a94.vfs.cloud9.us-east-1.amazonaws.com
+[ActionDispatch::HostAuthorization::DefaultResponseApp] Blocked hosts: 98b6865d163c400f8ee565ae3f084a94.vfs.cloud9.us-east-1.amazonaws.com
+Started GET "/" for 146.111.194.22 at 2026-04-28 22:02:57 +0000
+Cannot render console from 146.111.194.22! Allowed networks: 127.0.0.0/127.255.255.255, ::1, ::ffff:127.0.0.0/::ffff:127.255.255.255
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Coffee'*/[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /home/ec2-user/.local/share/gem/ruby/gems/railties-8.1.3/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /home/ec2-user/.local/share/gem/ruby/gems/railties-8.1.3/lib/rails/templates/rails/welcome/index.html.erb (Duration: 0.9ms | GC: 0.0ms)
+Completed 200 OK in 17ms (Views: 5.6ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.8ms)
+
+
+Started GET "/" for 146.111.194.22 at 2026-04-28 22:03:01 +0000
+Cannot render console from 146.111.194.22! Allowed networks: 127.0.0.0/127.255.255.255, ::1, ::ffff:127.0.0.0/::ffff:127.255.255.255
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /home/ec2-user/.local/share/gem/ruby/gems/railties-8.1.3/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /home/ec2-user/.local/share/gem/ruby/gems/railties-8.1.3/lib/rails/templates/rails/welcome/index.html.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 8ms (Views: 7.0ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 2.5ms)
+
+
+Started GET "/beans" for 146.111.194.22 at 2026-04-28 22:03:10 +0000
+Cannot render console from 146.111.194.22! Allowed networks: 127.0.0.0/127.255.255.255, ::1, ::ffff:127.0.0.0/::ffff:127.255.255.255
+Processing by BeansController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering beans/index.html.erb within layouts/application
+  [1m[36mBean Load (1.5ms)[0m  [1m[34mSELECT "beans".* FROM "beans" /*action='index',application='Coffee',controller='beans'*/[0m
+  ↳ app/views/beans/index.html.erb:9
+  Rendered beans/index.html.erb within layouts/application (Duration: 9.9ms | GC: 0.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 23.4ms | GC: 1.6ms)
+Completed 200 OK in 117ms (Views: 23.7ms | ActiveRecord: 2.0ms (1 query, 0 cached) | GC: 29.5ms)
+
+
+Started GET "/beans/new" for 146.111.194.22 at 2026-04-28 22:03:14 +0000
+Cannot render console from 146.111.194.22! Allowed networks: 127.0.0.0/127.255.255.255, ::1, ::ffff:127.0.0.0/::ffff:127.255.255.255
+Processing by BeansController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering beans/new.html.erb within layouts/application
+  Rendered beans/_form.html.erb (Duration: 19.4ms | GC: 0.6ms)
+  Rendered beans/new.html.erb within layouts/application (Duration: 21.4ms | GC: 1.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 22.7ms | GC: 1.2ms)
+Completed 200 OK in 33ms (Views: 23.6ms | ActiveRecord: 0.6ms (0 queries, 0 cached) | GC: 1.8ms)
+
+
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Coffee'*/[0m
+  [1m[36mBean Load (0.8ms)[0m  [1m[34mSELECT "beans".* FROM "beans" /*application='Coffee'*/[0m
+  [1m[36mSupplier Load (0.2ms)[0m  [1m[34mSELECT "suppliers".* FROM "suppliers" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mSupplier Create (2.1ms)[0m  [1m[32mINSERT INTO "suppliers" ("name", "address", "city", "state", "email", "phone", "created_at", "updated_at") VALUES ('AnyCompany coffee suppliers', '123 Any Street', 'Any Town', 'WA', 'info@example.com', '555-555-0100', '2026-04-28 22:04:17.348682', '2026-04-28 22:04:17.348682') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (2.5ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mSupplier Create (2.1ms)[0m  [1m[32mINSERT INTO "suppliers" ("name", "address", "city", "state", "email", "phone", "created_at", "updated_at") VALUES ('Central Example Corp. coffee', '100 Main Street', 'Nowhere', 'CO', 'info@example.net', '555-555-0101', '2026-04-28 22:04:17.359302', '2026-04-28 22:04:17.359302') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mSupplier Create (2.7ms)[0m  [1m[32mINSERT INTO "suppliers" ("name", "address", "city", "state", "email", "phone", "created_at", "updated_at") VALUES ('North East AnyCompany coffee suppliers', '1001 Main Street', 'Any Town', 'NY', 'info@example.co', '555-555-0102', '2026-04-28 22:04:17.366737', '2026-04-28 22:04:17.366737') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mSupplier Create (2.4ms)[0m  [1m[32mINSERT INTO "suppliers" ("name", "address", "city", "state", "email", "phone", "created_at", "updated_at") VALUES ('SE Example corp coffee suppliers', '200 1st street', 'None city', 'GA', 'info@example.org', '555-555-0103', '2026-04-28 22:04:17.375150', '2026-04-28 22:04:17.375150') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mSupplier Create (2.1ms)[0m  [1m[32mINSERT INTO "suppliers" ("name", "address", "city", "state", "email", "phone", "created_at", "updated_at") VALUES ('SW Example Corp. coffee', '333 Main st', 'Anytown', 'AZ', 'info@example.me', '555-555-0104', '2026-04-28 22:04:17.383401', '2026-04-28 22:04:17.383401') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mSupplier Create (44.3ms)[0m  [1m[32mINSERT INTO "suppliers" ("name", "address", "city", "state", "email", "phone", "created_at", "updated_at") VALUES ('Northern Example Corp. coffee', '444 Main st', 'Not town', 'MN', 'coffee@example.com', '555-555-0106', '2026-04-28 22:04:17.390179', '2026-04-28 22:04:17.390179') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mSupplier Create (1.9ms)[0m  [1m[32mINSERT INTO "suppliers" ("name", "address", "city", "state", "email", "phone", "created_at", "updated_at") VALUES ('West coast example Corp. coffee', '1212 SE 30th Ave', 'Any beach', 'CA', 'coffee@example.coffee', '555-555-0107', '2026-04-28 22:04:17.440330', '2026-04-28 22:04:17.440330') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mSupplier Create (2.2ms)[0m  [1m[32mINSERT INTO "suppliers" ("name", "address", "city", "state", "email", "phone", "created_at", "updated_at") VALUES ('Southern AnyCompany coffee suppliers', '555 Main st', 'Anytown', 'TX', 'coffee@example.biz', '555-555-0108', '2026-04-28 22:04:17.447077', '2026-04-28 22:04:17.447077') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (2.9ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (1, 'Arabica', 'Best bean', 18.0, 'Delicious, smooth coffee.', 1000, '2026-04-28 22:04:17.486635', '2026-04-28 22:04:17.486635') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (2.2ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (1, 'Robusta', 'Great bean', 12.0, 'Full bodied, good to the last drop.', 800, '2026-04-28 22:04:17.494970', '2026-04-28 22:04:17.494970') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (2.0ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (2, 'Robusta', 'Top bean', 10.0, 'Great all around bean.', 500, '2026-04-28 22:04:17.503710', '2026-04-28 22:04:17.503710') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (2.1ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (2, 'Liberica', 'Better bean', 14.0, 'This bean stands above the rest.', 600, '2026-04-28 22:04:17.511216', '2026-04-28 22:04:17.511216') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (2.2ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (3, 'Excelsa', 'Premiere bean', 18.0, 'The best bean in all the land', 200, '2026-04-28 22:04:17.519401', '2026-04-28 22:04:17.519401') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (2.0ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (4, 'Arabica', 'House bean', 11.0, 'A solid performer.', 900, '2026-04-28 22:04:17.527034', '2026-04-28 22:04:17.527034') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (2.0ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (4, 'Robusta', 'Quality bean', 13.0, 'A great bean for daily use.', 350, '2026-04-28 22:04:17.534170', '2026-04-28 22:04:17.534170') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (4.1ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (5, 'Robusta', 'Superb bean', 16.0, 'No bean is better', 700, '2026-04-28 22:04:17.541146', '2026-04-28 22:04:17.541146') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (6.3ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (5, 'Liberica', 'Top tier bean', 15.0, 'The bean that impresses.', 300, '2026-04-28 22:04:17.550330', '2026-04-28 22:04:17.550330') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (3.1ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (6, 'Arabica', 'Stellar bean', 13.0, 'The top star of beans', 300, '2026-04-28 22:04:17.563495', '2026-04-28 22:04:17.563495') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (2.0ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (7, 'Robusta', 'Terrific bean', 12.0, 'This is a great bean', 800, '2026-04-28 22:04:17.571950', '2026-04-28 22:04:17.571950') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (2.2ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (7, 'Liberica', 'Supreme bean', 17.0, 'Solid performing bean.  Light roast for smooth taste.', 700, '2026-04-28 22:04:17.579980', '2026-04-28 22:04:17.579980') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (2.1ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (8, 'Liberica', 'Ace bean', 10.0, 'Medium roast bean.  Good for brewed coffee.', 1000, '2026-04-28 22:04:17.588107', '2026-04-28 22:04:17.588107') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mBean Create (3.0ms)[0m  [1m[32mINSERT INTO "beans" ("supplier_id", "type", "product_name", "price", "description", "quantity", "created_at", "updated_at") VALUES (8, 'Excelsa', 'Unrivaled bean', 16.0, 'Dark roast bean.  Best for espresso.', 300, '2026-04-28 22:04:17.595387', '2026-04-28 22:04:17.595387') RETURNING "id" /*application='Coffee'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='Coffee'*/[0m
+  [1m[36mSupplier Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "suppliers" /*application='Coffee'*/[0m
+  [1m[36mBean Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beans" /*application='Coffee'*/[0m
+Started GET "/beans" for 146.111.194.22 at 2026-04-28 22:04:26 +0000
+Cannot render console from 146.111.194.22! Allowed networks: 127.0.0.0/127.255.255.255, ::1, ::ffff:127.0.0.0/::ffff:127.255.255.255
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Coffee'*/[0m
+Processing by BeansController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering beans/index.html.erb within layouts/application
+  [1m[36mBean Load (3.8ms)[0m  [1m[34mSELECT "beans".* FROM "beans" /*action='index',application='Coffee',controller='beans'*/[0m
+  ↳ app/views/beans/index.html.erb:9
+  Rendered beans/_bean.html.erb (Duration: 0.9ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/index.html.erb within layouts/application (Duration: 78.6ms | GC: 51.6ms)
+  Rendered layout layouts/application.html.erb (Duration: 87.1ms | GC: 52.3ms)
+Completed 200 OK in 112ms (Views: 85.3ms | ActiveRecord: 5.0ms (1 query, 0 cached) | GC: 54.4ms)
+
+
+Started GET "/beans/1" for 146.111.194.22 at 2026-04-28 22:04:31 +0000
+Cannot render console from 146.111.194.22! Allowed networks: 127.0.0.0/127.255.255.255, ::1, ::ffff:127.0.0.0/::ffff:127.255.255.255
+Processing by BeansController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mBean Load (0.2ms)[0m  [1m[34mSELECT "beans".* FROM "beans" WHERE "beans"."id" = 1 LIMIT 1 /*action='show',application='Coffee',controller='beans'*/[0m
+  ↳ app/controllers/beans_controller.rb:63:in `set_bean'
+  Rendering layout layouts/application.html.erb
+  Rendering beans/show.html.erb within layouts/application
+  Rendered beans/_bean.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered beans/show.html.erb within layouts/application (Duration: 2.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.4ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 4.1ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/beans.json" for 146.111.194.22 at 2026-04-28 22:04:42 +0000
+Cannot render console from 146.111.194.22! Allowed networks: 127.0.0.0/127.255.255.255, ::1, ::ffff:127.0.0.0/::ffff:127.255.255.255
+Processing by BeansController#index as JSON
+  Rendering beans/index.json.jbuilder
+  [1m[36mBean Load (0.3ms)[0m  [1m[34mSELECT "beans".* FROM "beans" /*action='index',application='Coffee',controller='beans'*/[0m
+  ↳ app/views/beans/index.json.jbuilder:1
+  Rendered collection of beans/_bean.json.jbuilder [14 times] (Duration: 3.9ms | GC: 0.4ms)
+  Rendered beans/index.json.jbuilder (Duration: 7.0ms | GC: 0.4ms)
+Completed 200 OK in 9ms (Views: 7.5ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/favicon.ico" for 146.111.194.22 at 2026-04-28 22:04:42 +0000
+Cannot render console from 146.111.194.22! Allowed networks: 127.0.0.0/127.255.255.255, ::1, ::ffff:127.0.0.0/::ffff:127.255.255.255
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  

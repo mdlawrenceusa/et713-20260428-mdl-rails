@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a1612">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>AWS · Field Manual</title>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300;9..144,500;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     AWS · FIELD MANUAL
+     A vintage scientific-catalog approach to studying the cloud.
+     Aesthetic: parchment + ink, editorial typography, no chrome.
+     ============================================================ */
+
+  :root {
+    --paper:        #f1ead8;
+    --paper-warm:   #ebe2ca;
+    --paper-deep:   #d9cdaa;
+    --ink:          #1a1612;
+    --ink-soft:     #3d3328;
+    --ink-faint:    #6b5d48;
+    --rule:         #2a221a;
+    --accent:       #c8431a;     /* AWS-adjacent burnt orange */
+    --accent-dark:  #8a2d0e;
+    --accent-glow:  rgba(200, 67, 26, 0.12);
+    --green:        #4a6b3a;
+    --gold:         #b08020;
+    --shadow-paper: 0 1px 0 rgba(26,22,18,.04),
+                    0 8px 24px rgba(26,22,18,.08),
+                    0 24px 48px rgba(26,22,18,.06);
+    --grain-opacity: 0.4;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Fraunces', Georgia, serif;
+    font-feature-settings: "ss01","ss02","ss03","liga","kern";
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Paper grain — adds tactile depth without imagery */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(139,108,60,.05) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(89,60,30,.06) 0%, transparent 50%);
+    mix-blend-mode: multiply;
+  }
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    mix-blend-mode: multiply;
+  }
+
+  .page {
+    position: relative;
+    z-index: 3;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ============================================================
+     MASTHEAD
+     ============================================================ */
+  .masthead {
+    border-top: 4px double var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 18px 0 14px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .masthead .topline {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .masthead .topline .right { font-style: normal; }
+  .masthead h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(40px, 9vw, 88px);
+    line-height: 0.92;
+    margin: 0;
+    letter-spacing: -0.03em;
+    font-variation-settings: "SOFT" 50;
+  }
+  .masthead h1 .ital {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--accent-dark);
+    letter-spacing: -0.04em;
+  }
+  .masthead .tag {
+    margin-top: 10px;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(15px, 2.6vw, 19px);
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+
+  /* Decorative ornament */
+  .ornament {
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    color: var(--ink-faint);
+    margin: 24px 0;
+    font-size: 14px;
+    letter-spacing: 0.4em;
+  }
+
+  /* ============================================================
+     TOOLBAR — filters, progress, controls
+     ============================================================ */
+  .toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 18px;
+    border: 1px solid var(--rule);
+    background: var(--paper-warm);
+    box-shadow: var(--shadow-paper);
+    position: relative;
+  }
+  .toolbar::before {
+    content: "§";
+    position: absolute;
+    top: -14px;
+    left: 18px;
+    background: var(--paper);
+    padding: 0 8px;
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--accent-dark);
+    font-weight: 700;
+  }
+
+  .stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    align-items: baseline;
+    border-bottom: 1px dotted var(--ink-faint);
+    padding-bottom: 14px;
+    margin-bottom: 4px;
+  }
+  .stat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .stat strong {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    color: var(--ink);
+    font-size: 22px;
+    margin-right: 6px;
+    letter-spacing: -0.02em;
+    text-transform: none;
+  }
+  .stat.known strong { color: var(--green); }
+  .stat.review strong { color: var(--accent); }
+
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--ink-soft);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 160ms ease;
+    user-select: none;
+  }
+  .chip:hover { background: var(--ink); color: var(--paper); }
+  .chip.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .chip .count {
+    margin-left: 6px;
+    opacity: 0.6;
+    font-weight: 400;
+  }
+
+  /* ============================================================
+     MODE SWITCH — Browse vs Study
+     ============================================================ */
+  .mode-switch {
+    display: flex;
+    border: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .mode-switch button {
+    flex: 1;
+    padding: 10px 14px;
+    background: transparent;
+    border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--ink-soft);
+    transition: all 160ms ease;
+  }
+  .mode-switch button + button { border-left: 1px solid var(--rule); }
+  .mode-switch button.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* ============================================================
+     CARD GRID  (Browse mode)
+     ============================================================ */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+  }
+  .card-mini {
+    aspect-ratio: 5 / 7;
+    perspective: 1200px;
+    cursor: pointer;
+  }
+  .card-mini-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 700ms cubic-bezier(0.4, 0.05, 0.2, 1);
+  }
+  .card-mini.flipped .card-mini-inner { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    box-shadow: var(--shadow-paper);
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .card-face::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 1px solid var(--ink-faint);
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  .card-face.back {
+    transform: rotateY(180deg);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .card-face.back::before {
+    border-color: var(--paper-deep);
+    opacity: 0.3;
+  }
+
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+  }
+  .card-face.back .card-meta { color: var(--paper-deep); opacity: 0.6; }
+
+  .card-icon {
+    width: 56px;
+    height: 56px;
+    margin: 8px 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-icon svg { width: 100%; height: 100%; }
+
+  .card-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .card-fullname {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  .card-face.back .card-fullname { color: var(--paper-deep); }
+  .card-tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-dark);
+    margin-top: auto;
+    border-top: 1px dotted var(--ink-faint);
+    padding-top: 8px;
+  }
+  .card-face.back .card-tagline { color: var(--accent); border-top-color: var(--paper-deep); opacity: 0.8; }
+
+  .card-back-content {
+    flex: 1;
+    overflow-y: auto;
+    margin: 8px 0;
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--paper);
+  }
+  .card-back-content h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--paper-deep);
+    margin: 10px 0 4px;
+    font-weight: 500;
+    opacity: 0.7;
+  }
+  .card-back-content h4:first-child { margin-top: 0; }
+  .card-back-content p { margin: 0 0 6px; }
+  .card-back-content em {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--paper-deep);
+  }
+
+  .badge-new {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--accent);
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    padding: 3px 6px;
+    text-transform: uppercase;
+    transform: rotate(3deg);
+    box-shadow: 1px 1px 0 var(--ink);
+  }
+
+  .status-mark {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1;
+  }
+  .card-mini.known .status-mark {
+    background: var(--green); color: var(--paper);
+  }
+  .card-mini.review .status-mark {
+    background: var(--accent); color: var(--paper);
+  }
+  .card-mini.known .status-mark::before { content: "✓"; }
+  .card-mini.review .status-mark::before { content: "↻"; }
+
+  /* ============================================================
+     STUDY MODE — single big card
+     ============================================================ */
+  .study-stage {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+  }
+  .study-stage.active { display: flex; }
+
+  .study-progress {
+    width: 100%;
+    max-width: 520px;
+    margin-bottom: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .study-bar {
+    height: 2px;
+    background: var(--paper-deep);
+    width: 100%;
+    max-width: 520px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .study-bar-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: var(--ink);
+    width: 0%;
+    transition: width 400ms ease;
+  }
+
+  .study-card {
+    width: 100%;
+    max-width: 520px;
+    aspect-ratio: 5 / 7;
+    perspective: 1500px;
+    cursor: pointer;
+    margin-bottom: 24px;
+  }
+  .study-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 800ms cubic-bezier(0.4, 0.05, 0.2, 1);
+  }
+  .study-card.flipped .study-card-inner { transform: rotateY(180deg); }
+
+  .study-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    box-shadow: var(--shadow-paper), 0 40px 60px -20px rgba(26,22,18,.2);
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .study-face::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid var(--ink-faint);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .study-face.back {
+    transform: rotateY(180deg);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .study-face.back::before { border-color: var(--paper-deep); opacity: 0.4; }
+
+  .study-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 18px;
+  }
+  .study-face.back .study-meta { color: var(--paper-deep); opacity: 0.6; }
+
+  .study-icon {
+    width: 100px;
+    height: 100px;
+    margin: 16px auto 24px;
+  }
+  @media (max-width: 480px) {
+    .study-icon { width: 80px; height: 80px; margin: 8px auto 18px; }
+  }
+
+  .study-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(36px, 8vw, 56px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .study-fullname {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(15px, 3vw, 18px);
+    text-align: center;
+    color: var(--ink-soft);
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+  .study-face.back .study-fullname { color: var(--paper-deep); }
+
+  .study-tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-dark);
+    text-align: center;
+    margin-top: auto;
+    border-top: 1px dotted var(--ink-faint);
+    padding-top: 14px;
+  }
+  .study-face.back .study-tagline {
+    color: var(--accent);
+    border-top-color: var(--paper-deep);
+    opacity: 0.9;
+  }
+
+  .study-flip-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 12px;
+    opacity: 0.6;
+    text-align: center;
+  }
+  .study-face.back .study-flip-hint { color: var(--paper-deep); }
+
+  .study-back-body {
+    flex: 1;
+    overflow-y: auto;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(15px, 2.6vw, 17px);
+    line-height: 1.55;
+    color: var(--paper);
+    padding-right: 6px;
+  }
+  .study-back-body h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--paper-deep);
+    margin: 14px 0 6px;
+    font-weight: 500;
+    opacity: 0.7;
+  }
+  .study-back-body h4:first-child { margin-top: 0; }
+  .study-back-body p { margin: 0 0 8px; }
+  .study-back-body em {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--paper-deep);
+  }
+  .study-back-body code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+    background: rgba(241,234,216,.1);
+    padding: 1px 5px;
+    border: 1px solid rgba(241,234,216,.2);
+  }
+
+  /* Study controls */
+  .study-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 520px;
+    margin-bottom: 12px;
+  }
+  .study-controls button {
+    padding: 14px 16px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    transition: all 180ms ease;
+  }
+  .study-controls button:hover { background: var(--paper-deep); }
+  .study-controls .btn-known {
+    background: var(--green); color: var(--paper); border-color: var(--green);
+  }
+  .study-controls .btn-known:hover { background: #3a5a2c; }
+  .study-controls .btn-review {
+    background: var(--accent); color: var(--paper); border-color: var(--accent);
+  }
+  .study-controls .btn-review:hover { background: var(--accent-dark); }
+
+  .study-nav {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 520px;
+  }
+  .study-nav button {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--ink-soft);
+    background: transparent;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    transition: all 160ms ease;
+  }
+  .study-nav button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .study-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* ============================================================
+     EMPTY STATES + RESET
+     ============================================================ */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-faint);
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 22px;
+  }
+
+  .reset-btn {
+    margin-top: 20px;
+    padding: 8px 14px;
+    border: 1px solid var(--accent-dark);
+    background: transparent;
+    color: var(--accent-dark);
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .reset-btn:hover { background: var(--accent-dark); color: var(--paper); }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  .colophon {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 4px double var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-align: center;
+    line-height: 2;
+  }
+  .colophon .signature {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+  }
+
+  /* ============================================================
+     SYNC STATUS
+     ============================================================ */
+  .sync-status {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 50;
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    box-shadow: var(--shadow-paper);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.85;
+    transition: opacity 200ms;
+  }
+  .sync-status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+  .sync-status.offline::before { background: var(--gold); }
+
+  /* ============================================================
+     MOTION + RESPONSIVE
+     ============================================================ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card-mini, .study-stage { animation: fadeUp 600ms ease both; }
+
+  @media (min-width: 720px) {
+    .toolbar {
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+    }
+    .toolbar > .left  { grid-column: 1; }
+    .toolbar > .right { grid-column: 2; align-self: start; }
+  }
+
+  @media (max-width: 480px) {
+    .page { padding: 20px 16px 60px; }
+    .grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .card-name { font-size: 18px; }
+    .card-fullname { font-size: 11px; }
+    .card-icon { width: 40px; height: 40px; }
+    .card-face { padding: 12px 10px; }
+    .card-back-content { font-size: 12px; }
+    .study-face { padding: 22px 18px; }
+  }
+
+  /* Reduce motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  ::selection { background: var(--accent); color: var(--paper); }
+
+  /* Scrollbar styling for the back-of-card body */
+  .study-back-body::-webkit-scrollbar,
+  .card-back-content::-webkit-scrollbar { width: 4px; }
+  .study-back-body::-webkit-scrollbar-thumb,
+  .card-back-content::-webkit-scrollbar-thumb {
+    background: var(--paper-deep); border-radius: 2px;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <!-- ========================================================
+       MASTHEAD
+       ======================================================== -->
+  <header class="masthead">
+    <div class="topline">
+      <span>Vol. I · No. <span id="vol-no">01</span> · Cloud Studies</span>
+      <span class="right">A Field Manual for AWS · 2016&ndash;2026</span>
+    </div>
+    <h1>The Amazon <span class="ital">Cloud</span><br>Practitioner's Catalogue</h1>
+    <p class="tag">A working repertoire of the services that move the modern web — annotated, illustrated, and committed to memory by repetition.</p>
+  </header>
+
+  <!-- ========================================================
+       TOOLBAR
+       ======================================================== -->
+  <section class="toolbar" aria-label="Controls">
+    <div class="left">
+      <div class="stats-row">
+        <span class="stat"><strong id="stat-total">0</strong> in catalogue</span>
+        <span class="stat known"><strong id="stat-known">0</strong> mastered</span>
+        <span class="stat review"><strong id="stat-review">0</strong> to review</span>
+        <span class="stat"><strong id="stat-pct">0%</strong> committed</span>
+      </div>
+      <div class="filter-row" id="filter-row" role="tablist"></div>
+    </div>
+    <div class="right">
+      <div class="mode-switch" role="tablist">
+        <button id="mode-browse" class="active" type="button">Browse</button>
+        <button id="mode-study" type="button">Study</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       BROWSE MODE: Grid
+       ======================================================== -->
+  <section id="browse-stage" aria-label="All cards">
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- ========================================================
+       STUDY MODE
+       ======================================================== -->
+  <section class="study-stage" id="study-stage">
+    <div class="study-progress">
+      <span><span id="study-current">1</span> / <span id="study-total">1</span></span>
+      <span id="study-category">CORE COMPUTE</span>
+    </div>
+    <div class="study-bar"><div class="study-bar-fill" id="study-bar"></div></div>
+
+    <div class="study-card" id="study-card">
+      <div class="study-card-inner" id="study-card-inner">
+        <div class="study-face front">
+          <div class="study-meta">
+            <span id="sf-no">№ 001</span>
+            <span id="sf-cat">CORE COMPUTE</span>
+          </div>
+          <div class="study-icon" id="sf-icon"></div>
+          <div class="study-name" id="sf-name">EC2</div>
+          <div class="study-fullname" id="sf-fullname">Elastic Compute Cloud</div>
+          <div class="study-tagline" id="sf-tagline">Virtual servers, on demand.</div>
+          <div class="study-flip-hint">Tap card to reveal &mdash;</div>
+        </div>
+        <div class="study-face back">
+          <div class="study-meta">
+            <span id="sb-no">№ 001</span>
+            <span>VERSO</span>
+          </div>
+          <div class="study-back-body" id="sb-body"></div>
+          <div class="study-flip-hint">Tap card to return</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="study-controls">
+      <button class="btn-review" id="btn-review" type="button">Review later</button>
+      <button class="btn-known"  id="btn-known"  type="button">I know this</button>
+    </div>
+    <div class="study-nav">
+      <button id="btn-prev" type="button">← Previous</button>
+      <button id="btn-skip" type="button">Skip</button>
+      <button id="btn-next" type="button">Next →</button>
+    </div>
+  </section>
+
+  <div class="ornament">❦ &nbsp; ❦ &nbsp; ❦</div>
+
+  <footer class="colophon">
+    <div>Set in Fraunces, Instrument Serif &amp; JetBrains Mono</div>
+    <div>Stored locally · Synced across sessions · Works offline</div>
+    <button class="reset-btn" id="reset-btn" type="button">Reset all progress</button>
+    <div class="signature">&mdash; A study aid for cloud practitioners. Press any key to advance.</div>
+  </footer>
+</div>
+
+<div class="sync-status" id="sync-status">
+  <span id="sync-label">Saved locally</span>
+</div>
+
+<script>
+/* ==============================================================
+   AWS · FIELD MANUAL — engine
+   - IndexedDB persistence (study state)
+   - Optional cloud sync stub (DynamoDB-ready interface)
+   - Pure vanilla JS, single file
+   ============================================================== */
+
+/* ---------------- DATA ---------------- */
+
+const SVG = {
+  // Each icon is a tiny ink-style SVG matching the parchment aesthetic.
+  // Currentcolor based so they invert on dark backs.
+  ec2: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="10" width="44" height="44" rx="2"/><rect x="18" y="18" width="28" height="28"/><path d="M22 10 v-4 M32 10 v-4 M42 10 v-4 M22 58 v-4 M32 58 v-4 M42 58 v-4 M10 22 h-4 M10 32 h-4 M10 42 h-4 M58 22 h-4 M58 32 h-4 M58 42 h-4"/><circle cx="32" cy="32" r="3" fill="currentColor"/></svg>`,
+  s3: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="32" cy="14" rx="20" ry="6"/><path d="M12 14 v36 c0 3.3 9 6 20 6 s20-2.7 20-6 V14"/><path d="M12 26 c0 3.3 9 6 20 6 s20-2.7 20-6"/><path d="M12 38 c0 3.3 9 6 20 6 s20-2.7 20-6"/></svg>`,
+  sqs: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 32 h36" stroke-linecap="round"/><path d="M44 26 l8 6 -8 6" stroke-linejoin="round"/><rect x="6" y="20" width="8" height="24"/><rect x="18" y="20" width="8" height="24"/><rect x="30" y="20" width="8" height="24"/></svg>`,
+  swf: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="32" r="6"/><circle cx="14" cy="14" r="5"/><circle cx="50" cy="14" r="5"/><circle cx="14" cy="50" r="5"/><circle cx="50" cy="50" r="5"/><path d="M19 18 L27 28 M45 18 L37 28 M19 46 L27 36 M45 46 L37 36"/></svg>`,
+  dynamodb: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="32" cy="14" rx="20" ry="6"/><path d="M12 14 v12 c0 3.3 9 6 20 6 s20-2.7 20-6 V14"/><path d="M12 26 v12 c0 3.3 9 6 20 6 s20-2.7 20-6 V26"/><path d="M12 38 v12 c0 3.3 9 6 20 6 s20-2.7 20-6 V38"/><path d="M26 32 L32 36 L38 32" stroke-width="1.5"/></svg>`,
+  redshift: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="38" width="6" height="16"/><rect x="22" y="28" width="6" height="26"/><rect x="34" y="18" width="6" height="36"/><rect x="46" y="8" width="6" height="46"/></svg>`,
+  cloudfront: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="32" r="22"/><ellipse cx="32" cy="32" rx="22" ry="9"/><ellipse cx="32" cy="32" rx="9" ry="22"/><path d="M10 32 h44 M32 10 v44"/></svg>`,
+  cloudwatch: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="32" r="22"/><path d="M32 32 L32 16 M32 32 L44 38" stroke-linecap="round"/><circle cx="32" cy="32" r="3" fill="currentColor"/></svg>`,
+  ecs: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="14" width="16" height="16"/><rect x="24" y="14" width="16" height="16"/><rect x="42" y="14" width="16" height="16"/><rect x="14" y="34" width="16" height="16"/><rect x="32" y="34" width="16" height="16"/></svg>`,
+  elb: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="14" r="6"/><path d="M32 20 L32 30 M32 30 L14 44 M32 30 L32 44 M32 30 L50 44"/><rect x="8" y="44" width="12" height="12"/><rect x="26" y="44" width="12" height="12"/><rect x="44" y="44" width="12" height="12"/></svg>`,
+  elasticsearch: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="28" cy="28" r="14"/><path d="M38 38 L52 52" stroke-linecap="round" stroke-width="3"/><path d="M22 28 h12 M28 22 v12" /></svg>`,
+  kinesis: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 20 Q20 10, 32 20 T56 20" stroke-linecap="round"/><path d="M8 32 Q20 22, 32 32 T56 32" stroke-linecap="round"/><path d="M8 44 Q20 34, 32 44 T56 44" stroke-linecap="round"/></svg>`,
+  firehose: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 32 L24 32" stroke-linecap="round" stroke-width="3"/><path d="M28 24 L40 32 L28 40 Z" fill="currentColor"/><path d="M44 32 L56 32 M48 26 L56 26 M48 38 L56 38" stroke-linecap="round"/></svg>`,
+  lambda: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 14 L26 14 L40 50 L52 50 M30 32 L18 50" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  route53: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="32" r="22"/><path d="M32 10 Q20 32 32 54 Q44 32 32 10" /><path d="M10 32 H54"/><path d="M14 22 Q32 28 50 22" /><path d="M14 42 Q32 36 50 42"/></svg>`,
+  vpc: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="14" width="52" height="36" rx="2"/><path d="M6 22 H58" stroke-dasharray="2 2"/><rect x="14" y="28" width="14" height="14"/><rect x="36" y="28" width="14" height="14"/><circle cx="21" cy="35" r="2" fill="currentColor"/><circle cx="43" cy="35" r="2" fill="currentColor"/></svg>`,
+  sns: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="32" r="6"/><path d="M20 32 L40 18 L40 46 Z" stroke-linejoin="round"/><path d="M44 24 Q52 32 44 40" stroke-linecap="round"/><path d="M48 18 Q60 32 48 46" stroke-linecap="round"/></svg>`,
+  cloudtrail: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 12 L48 12 L48 52 L16 52 Z"/><path d="M22 22 H42 M22 30 H42 M22 38 H38" stroke-linecap="round"/><circle cx="42" cy="46" r="4"/><path d="M45 49 L50 54" stroke-linecap="round"/></svg>`,
+  datapipeline: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="6"/><circle cx="50" cy="14" r="6"/><circle cx="14" cy="50" r="6"/><circle cx="50" cy="50" r="6"/><circle cx="32" cy="32" r="6"/><path d="M14 20 L14 44 M50 20 L50 44 M20 14 L44 14 M20 50 L44 50" stroke-dasharray="3 2"/><path d="M19 18 L27 27 M45 18 L37 27 M19 46 L27 37 M45 46 L37 37"/></svg>`,
+  iam: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="22" r="8"/><path d="M16 50 Q16 36 32 36 Q48 36 48 50"/><path d="M44 22 L52 14 M50 12 L54 16" stroke-linecap="round"/><circle cx="50" cy="14" r="3" fill="currentColor"/></svg>`,
+  kms: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="20" cy="32" r="10"/><circle cx="20" cy="32" r="3" fill="currentColor"/><path d="M30 32 L54 32 L54 40 M46 32 L46 38" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  // 2026 additions
+  rds: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="32" cy="14" rx="20" ry="6"/><path d="M12 14 v36 c0 3.3 9 6 20 6 s20-2.7 20-6 V14"/><path d="M12 26 c0 3.3 9 6 20 6 s20-2.7 20-6"/><path d="M12 38 c0 3.3 9 6 20 6 s20-2.7 20-6"/><circle cx="32" cy="32" r="2" fill="currentColor"/></svg>`,
+  aurora: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 40 Q20 20 32 40 T56 40" stroke-linecap="round"/><path d="M8 48 Q20 32 32 48 T56 48" stroke-linecap="round" opacity="0.5"/><circle cx="32" cy="20" r="4" fill="currentColor"/><path d="M28 16 L36 24 M36 16 L28 24" stroke-width="1"/></svg>`,
+  apigw: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="14" y="10" width="36" height="44" rx="2"/><path d="M22 22 h20 M22 30 h20 M22 38 h14" stroke-linecap="round"/><path d="M14 20 H8 M14 32 H4 M14 44 H8" stroke-linecap="round"/><path d="M50 20 H56 M50 32 H60 M50 44 H56" stroke-linecap="round"/></svg>`,
+  ecr: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="20" width="44" height="32" rx="1"/><path d="M10 28 H54 M16 36 h6 M28 36 h6 M40 36 h6 M16 44 h6 M28 44 h6 M40 44 h6"/><path d="M22 20 V12 H42 V20" stroke-linecap="round"/></svg>`,
+  beanstalk: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M32 54 L32 30" stroke-linecap="round"/><path d="M32 30 Q20 30 18 18 Q30 18 32 30" stroke-linejoin="round"/><path d="M32 30 Q44 30 46 18 Q34 18 32 30" stroke-linejoin="round"/><path d="M32 38 Q24 38 22 30 Q30 30 32 38" stroke-linejoin="round"/><path d="M22 54 H42" stroke-linecap="round"/></svg>`,
+  fargate: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="20" width="14" height="14"/><rect x="40" y="20" width="14" height="14"/><rect x="25" y="34" width="14" height="14"/><path d="M10 14 H54" stroke-dasharray="2 2"/><path d="M10 54 H54" stroke-dasharray="2 2"/></svg>`,
+  eks: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><polygon points="32,8 54,20 54,44 32,56 10,44 10,20"/><path d="M32 14 L32 32 M32 32 L18 26 M32 32 L46 26 M32 32 L26 50 M32 32 L38 50"/></svg>`,
+  bedrock: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 50 L20 32 L32 20 L44 32 L50 50 Z" stroke-linejoin="round"/><circle cx="32" cy="34" r="3" fill="currentColor"/><path d="M32 20 L32 8 M28 12 L36 12 M26 16 L38 16" stroke-linecap="round"/></svg>`,
+  sagemaker: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="32" r="6"/><circle cx="14" cy="20" r="4"/><circle cx="14" cy="44" r="4"/><circle cx="50" cy="20" r="4"/><circle cx="50" cy="44" r="4"/><path d="M18 20 L26 30 M18 44 L26 34 M46 20 L38 30 M46 44 L38 34"/></svg>`,
+  amazonq: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="30" cy="30" r="18"/><path d="M40 40 L52 52" stroke-linecap="round" stroke-width="3"/><path d="M22 30 a8 8 0 0 1 16 0" stroke-linecap="round"/></svg>`,
+  cloudformation: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="14" width="44" height="8"/><rect x="14" y="26" width="36" height="8"/><rect x="18" y="38" width="28" height="8"/><rect x="22" y="50" width="20" height="4"/></svg>`,
+  secrets: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="14" y="28" width="36" height="26" rx="2"/><path d="M22 28 V18 a10 10 0 0 1 20 0 V28" stroke-linecap="round"/><circle cx="32" cy="40" r="3" fill="currentColor"/><path d="M32 43 V48"/></svg>`,
+  cognito: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="22" r="8"/><path d="M16 52 Q16 36 32 36 Q48 36 48 52"/><path d="M14 14 L18 18 M50 14 L46 18" stroke-linecap="round"/><circle cx="32" cy="22" r="3" fill="currentColor" opacity="0.3"/></svg>`,
+  step: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="5"/><circle cx="32" cy="32" r="5"/><circle cx="50" cy="50" r="5"/><circle cx="14" cy="50" r="5"/><circle cx="50" cy="14" r="5"/><path d="M18 17 L28 28 M36 28 L46 17 M36 36 L46 47 M28 36 L18 47" stroke-linecap="round"/></svg>`,
+  eventbridge: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="32" r="6"/><circle cx="14" cy="14" r="4"/><circle cx="50" cy="14" r="4"/><circle cx="14" cy="50" r="4"/><circle cx="50" cy="50" r="4"/><circle cx="32" cy="8" r="4"/><circle cx="32" cy="56" r="4"/><path d="M18 17 L26 27 M46 17 L38 27 M18 47 L26 37 M46 47 L38 37 M32 12 L32 26 M32 38 L32 52" stroke-linecap="round"/></svg>`,
+  guardduty: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M32 8 L52 16 V34 Q52 48 32 56 Q12 48 12 34 V16 Z" stroke-linejoin="round"/><circle cx="32" cy="30" r="6"/><circle cx="32" cy="30" r="2" fill="currentColor"/></svg>`,
+  s3vectors: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="32" cy="14" rx="20" ry="6"/><path d="M12 14 v36 c0 3.3 9 6 20 6 s20-2.7 20-6 V14"/><path d="M22 32 L32 28 L42 32 L32 40 Z" fill="currentColor" fill-opacity="0.15"/><path d="M22 32 L32 28 L42 32 L32 40 Z M32 28 V40 M22 32 L42 32"/></svg>`,
+};
+
+const CATEGORIES = [
+  { id: "all",      name: "All" },
+  { id: "compute",  name: "Compute" },
+  { id: "storage",  name: "Storage" },
+  { id: "database", name: "Databases" },
+  { id: "network",  name: "Networking" },
+  { id: "messaging",name: "Messaging" },
+  { id: "ops",      name: "Operations" },
+  { id: "security", name: "Security" },
+  { id: "devtools", name: "DevTools" },
+  { id: "ai",       name: "AI/ML" },
+  { id: "modern",   name: "2026 Picks" },
+];
+
+// 36 cards: 18 from the 2016 slide + 18 modern essentials
+const CARDS = [
+  // ========== ORIGINAL 2016 CARDS ==========
+  { id: "ec2", name: "EC2", full: "Elastic Compute Cloud", category: "compute", icon: SVG.ec2,
+    tagline: "Virtual servers, on demand.",
+    body: `<h4>What it is</h4><p>Resizable virtual machines you launch in minutes &mdash; pick the CPU, memory, OS, and AZ. The original AWS workhorse.</p>
+           <h4>When to reach for it</h4><p>Custom runtimes, full OS control, GPU workloads, or lifting a legacy app to the cloud.</p>
+           <h4>Pair with</h4><p><em>Auto Scaling</em> for elasticity, <em>ELB</em> for traffic distribution, <em>EBS</em> for persistent disks.</p>` },
+
+  { id: "s3", name: "S3", full: "Simple Storage Service", category: "storage", icon: SVG.s3,
+    tagline: "Eleven nines of object durability.",
+    body: `<h4>What it is</h4><p>Object storage that scales infinitely with <em>99.999999999%</em> durability. The backbone of nearly every cloud architecture.</p>
+           <h4>When to reach for it</h4><p>Static sites, media files, data lakes, backups, log archives &mdash; anything that's "blob shaped."</p>
+           <h4>Pair with</h4><p><em>CloudFront</em> for global delivery, <em>Glacier</em> for cold storage tiers.</p>` },
+
+  { id: "sqs", name: "SQS", full: "Simple Queue Service", category: "messaging", icon: SVG.sqs,
+    tagline: "Decoupled, durable message queues.",
+    body: `<h4>What it is</h4><p>Fully managed message queues. Producers drop messages in; consumers pick them up at their own pace.</p>
+           <h4>When to reach for it</h4><p>Decoupling microservices, smoothing traffic spikes, asynchronous job processing.</p>
+           <h4>Cousin</h4><p><em>SNS</em> is publish/subscribe; <em>SQS</em> is point-to-point. They compose beautifully (fan-out pattern).</p>` },
+
+  { id: "swf", name: "SWF", full: "Simple Workflow Service", category: "compute", icon: SVG.swf,
+    tagline: "Coordinate distributed work.",
+    body: `<h4>What it is</h4><p>Coordinates tasks across distributed components &mdash; tracks state, handles retries, manages timeouts.</p>
+           <h4>2026 reality check</h4><p>Largely superseded by <em>AWS Step Functions</em>, which has better integrations and a visual designer. SWF is in maintenance mode for legacy workloads.</p>` },
+
+  { id: "dynamodb", name: "DynamoDB", full: "NoSQL Key/Value at Scale", category: "database", icon: SVG.dynamodb,
+    tagline: "Single-digit millisecond NoSQL.",
+    body: `<h4>What it is</h4><p>Fully managed serverless NoSQL. Single-digit millisecond performance at any scale. Powers Amazon.com, Lyft, Snap.</p>
+           <h4>When to reach for it</h4><p>Session state, user profiles, IoT telemetry, leaderboards, anything with a known access pattern.</p>
+           <h4>Watch out</h4><p>Design for your access patterns first. Joins and ad-hoc queries don't fit the model.</p>` },
+
+  { id: "redshift", name: "Redshift", full: "Petabyte-scale Data Warehouse", category: "database", icon: SVG.redshift,
+    tagline: "Columnar warehouse for analytics.",
+    body: `<h4>What it is</h4><p>Cloud data warehouse using columnar storage and massively parallel processing. SQL over petabytes.</p>
+           <h4>When to reach for it</h4><p>BI dashboards, complex aggregations across years of data, joining many large tables.</p>
+           <h4>Modern alternative</h4><p>For ad-hoc S3 queries without provisioning, see <em>Athena</em>.</p>` },
+
+  { id: "cloudfront", name: "CloudFront", full: "Global Content Delivery Network", category: "network", icon: SVG.cloudfront,
+    tagline: "400+ edge locations worldwide.",
+    body: `<h4>What it is</h4><p>AWS's CDN. Caches your content at edge locations close to users for low-latency delivery.</p>
+           <h4>When to reach for it</h4><p>Pretty much any production website &mdash; especially media-heavy sites or anything global.</p>
+           <h4>Bonus</h4><p>Pairs with <em>Lambda@Edge</em> and <em>CloudFront Functions</em> for request manipulation at the edge.</p>` },
+
+  { id: "cloudwatch", name: "CloudWatch", full: "Metrics, Logs &amp; Alarms", category: "ops", icon: SVG.cloudwatch,
+    tagline: "You can't fix what you can't see.",
+    body: `<h4>What it is</h4><p>The observability backbone of AWS &mdash; metrics, logs, traces, dashboards, and alarms.</p>
+           <h4>Essentials to know</h4><p>Custom metrics for business KPIs, <em>Logs Insights</em> for log queries, alarms triggering <em>SNS</em> notifications.</p>` },
+
+  { id: "ecs", name: "ECS", full: "Elastic Container Service", category: "compute", icon: SVG.ecs,
+    tagline: "Run containers without Kubernetes pain.",
+    body: `<h4>What it is</h4><p>AWS-native container orchestration. Simpler than Kubernetes; deeply integrated with the AWS ecosystem.</p>
+           <h4>Two launch types</h4><p><em>EC2</em> &mdash; you manage the instances. <em>Fargate</em> &mdash; serverless, AWS handles compute.</p>
+           <h4>When to choose ECS over EKS</h4><p>You don't need k8s portability, and you want less operational overhead.</p>` },
+
+  { id: "elb", name: "ELB", full: "Elastic Load Balancing", category: "network", icon: SVG.elb,
+    tagline: "Distributes traffic, fails gracefully.",
+    body: `<h4>What it is</h4><p>Spreads incoming traffic across healthy targets. Health checks recycle bad ones automatically.</p>
+           <h4>Three flavors</h4><p><em>ALB</em> &mdash; HTTP/S, path-based routing (the default for web). <em>NLB</em> &mdash; TCP/UDP, ultra-low latency. <em>CLB</em> &mdash; legacy, prefer ALB.</p>` },
+
+  { id: "elasticsearch", name: "OpenSearch", full: "Search &amp; Analytics (formerly Elasticsearch)", category: "database", icon: SVG.elasticsearch,
+    tagline: "Full-text search at scale.",
+    body: `<h4>What it is</h4><p>Managed search and log analytics. Full-text queries, structured search, log aggregation.</p>
+           <h4>Naming note</h4><p>AWS forked Elasticsearch in 2021 after a license dispute. The service is now <em>Amazon OpenSearch Service</em>.</p>
+           <h4>When to reach for it</h4><p>Log analytics (the famous ELK-style stack), product search, observability platforms.</p>` },
+
+  { id: "kinesis", name: "Kinesis", full: "Real-time Data Streams", category: "messaging", icon: SVG.kinesis,
+    tagline: "Stream processing, AWS-native.",
+    body: `<h4>What it is</h4><p>Ingest and process gigabytes per second of streaming data &mdash; clickstreams, telemetry, financial feeds.</p>
+           <h4>Variants</h4><p><em>Data Streams</em> for raw streams, <em>Firehose</em> for delivery to S3/Redshift, <em>Analytics</em> for SQL on streams.</p>` },
+
+  { id: "firehose", name: "Firehose", full: "Streaming Delivery to S3, Redshift, etc.", category: "messaging", icon: SVG.firehose,
+    tagline: "Pipe streams into your warehouse.",
+    body: `<h4>What it is</h4><p>The "load" half of stream processing. Buffers data and writes it to S3, Redshift, OpenSearch, or HTTP endpoints.</p>
+           <h4>Why it matters</h4><p>Zero ops &mdash; no shards to manage. Auto-scales with throughput. Optional in-flight transform via Lambda.</p>` },
+
+  { id: "lambda", name: "Lambda", full: "Serverless Functions", category: "compute", icon: SVG.lambda,
+    tagline: "Run code, no servers.",
+    body: `<h4>What it is</h4><p>Run code in response to events. Pay per millisecond. Scales from zero to thousands of concurrent runs.</p>
+           <h4>When to reach for it</h4><p>Event handlers, APIs (with API Gateway), scheduled jobs, glue between AWS services.</p>
+           <h4>Watch out</h4><p>Cold starts on big runtimes. 15-minute hard limit per invocation. Stateless by design.</p>` },
+
+  { id: "route53", name: "Route 53", full: "DNS &amp; Domain Registration", category: "network", icon: SVG.route53,
+    tagline: "Authoritative DNS for the cloud.",
+    body: `<h4>What it is</h4><p>Highly available DNS. Register domains, route traffic, run health checks. Named after port 53.</p>
+           <h4>Routing policies</h4><p>Simple, weighted, latency-based, geolocation, failover, multivalue. Combine for global active-active.</p>` },
+
+  { id: "vpc", name: "VPC", full: "Virtual Private Cloud", category: "network", icon: SVG.vpc,
+    tagline: "Your own private network in AWS.",
+    body: `<h4>What it is</h4><p>An isolated virtual network. You define IP ranges, subnets, route tables, gateways, and security rules.</p>
+           <h4>Building blocks</h4><p>Public subnets (Internet Gateway), private subnets (NAT Gateway), security groups (stateful), NACLs (stateless).</p>
+           <h4>Best practice</h4><p>Separate VPCs per environment. App tiers in private subnets, only the load balancer public.</p>` },
+
+  { id: "sns", name: "SNS", full: "Simple Notification Service", category: "messaging", icon: SVG.sns,
+    tagline: "Pub/sub fan-out.",
+    body: `<h4>What it is</h4><p>Publish/subscribe messaging. One message in, many subscribers out (SQS, Lambda, HTTP, email, SMS).</p>
+           <h4>Pattern to know</h4><p>The classic "fan-out": SNS topic publishes to multiple SQS queues, each consumed by a different service.</p>` },
+
+  { id: "cloudtrail", name: "CloudTrail", full: "Account &amp; API Audit Log", category: "security", icon: SVG.cloudtrail,
+    tagline: "Who did what, when, from where.",
+    body: `<h4>What it is</h4><p>Records every API call made in your AWS account. The audit log of the cloud.</p>
+           <h4>When to reach for it</h4><p>Security investigations, compliance audits, "who deleted that bucket?" forensics.</p>
+           <h4>Best practice</h4><p>Enable in every region, send logs to a locked S3 bucket in a separate account.</p>` },
+
+  { id: "datapipeline", name: "Data Pipeline", full: "Workflow Orchestration (legacy)", category: "ops", icon: SVG.datapipeline,
+    tagline: "ETL workflows on a schedule.",
+    body: `<h4>What it is</h4><p>The original AWS workflow tool for moving and transforming data on a schedule.</p>
+           <h4>2026 reality check</h4><p>Mostly superseded by <em>AWS Glue</em> for ETL and <em>Step Functions</em> for orchestration. Still works but not the default choice.</p>` },
+
+  { id: "iam", name: "IAM", full: "Identity &amp; Access Management", category: "security", icon: SVG.iam,
+    tagline: "Who can do what to what.",
+    body: `<h4>What it is</h4><p>The control plane for permissions. Users, groups, roles, policies &mdash; nothing happens in AWS without IAM saying yes.</p>
+           <h4>Vocabulary</h4><p><em>Principal</em> (who), <em>action</em> (what), <em>resource</em> (to what), <em>condition</em> (when).</p>
+           <h4>Golden rules</h4><p>Never use the root account. Prefer roles over keys. Least privilege, always. Enable MFA.</p>` },
+
+  { id: "kms", name: "KMS", full: "Key Management Service", category: "security", icon: SVG.kms,
+    tagline: "Manage encryption keys at scale.",
+    body: `<h4>What it is</h4><p>Centralized creation, rotation, and use of encryption keys. Hardware-backed (FIPS 140-2 validated).</p>
+           <h4>How it's used</h4><p>Most AWS services integrate transparently &mdash; "encrypt this S3 bucket with key X." Apps use the SDK to encrypt/decrypt small payloads or generate data keys for envelope encryption.</p>` },
+
+  // ========== 2026 ADDITIONS ==========
+  { id: "rds", name: "RDS", full: "Relational Database Service", category: "database", icon: SVG.rds, badge: "essential",
+    tagline: "Managed SQL: MySQL, Postgres, Oracle, SQL Server.",
+    body: `<h4>What it is</h4><p>Managed relational databases &mdash; AWS handles backups, patching, replication, failover. You handle the schema.</p>
+           <h4>When to reach for it</h4><p>Anything with relational integrity, JOINs, transactions. The default for traditional web apps.</p>
+           <h4>You met it in Lab 8.2</h4><p><em>Aurora Serverless</em> is RDS's serverless MySQL/Postgres tier &mdash; scales to zero, perfect for spiky workloads.</p>` },
+
+  { id: "aurora", name: "Aurora", full: "AWS-built MySQL/Postgres-compatible DB", category: "database", icon: SVG.aurora, badge: "modern",
+    tagline: "5× MySQL throughput, serverless option.",
+    body: `<h4>What it is</h4><p>AWS's homegrown relational engine. MySQL- and Postgres-compatible, with up to 5× the throughput and a storage layer built for the cloud.</p>
+           <h4>Aurora Serverless v2</h4><p>The flavor you used in the lab. Scales seamlessly between 0.5 and 128 ACUs as load changes &mdash; no instance sizing.</p>
+           <h4>Why it matters</h4><p>You get RDS's compatibility with cloud-native economics. Storage auto-grows to 128 TiB.</p>` },
+
+  { id: "apigw", name: "API Gateway", full: "Managed REST, HTTP &amp; WebSocket APIs", category: "network", icon: SVG.apigw, badge: "essential",
+    tagline: "The front door for your APIs.",
+    body: `<h4>What it is</h4><p>Builds, publishes, and secures APIs at any scale. Routing, throttling, auth, monitoring &mdash; all in one place.</p>
+           <h4>Three types</h4><p><em>REST</em> (full features), <em>HTTP</em> (cheaper, faster, simpler), <em>WebSocket</em> (real-time).</p>
+           <h4>You met it in Lab 8.2</h4><p>You wired API Gateway to your Elastic Beanstalk backend to expose <code>/beans.json</code> to the café site.</p>` },
+
+  { id: "ecr", name: "ECR", full: "Elastic Container Registry", category: "compute", icon: SVG.ecr,
+    tagline: "Private Docker registry, AWS-native.",
+    body: `<h4>What it is</h4><p>Private Docker image registry. IAM-integrated, scans for vulnerabilities, replicates across regions.</p>
+           <h4>Workflow</h4><p>Build locally → push to ECR → ECS/EKS/Beanstalk pulls and runs.</p>
+           <h4>You met it in Lab 8.2</h4><p>You pushed the <em>cafe/node-web-app</em> image to ECR; Beanstalk pulled it onto the EC2 instance.</p>` },
+
+  { id: "beanstalk", name: "Elastic Beanstalk", full: "Platform as a Service for AWS", category: "compute", icon: SVG.beanstalk,
+    tagline: "Deploy code, AWS handles the rest.",
+    body: `<h4>What it is</h4><p>Upload your code (or a Docker image), choose a platform, click deploy. Beanstalk provisions EC2, ELB, Auto Scaling, and CloudWatch automatically.</p>
+           <h4>You met it in Lab 8.2</h4><p>You deployed the coffee suppliers Docker image with a single Dockerrun.aws.json file.</p>
+           <h4>Trade-off</h4><p>Faster than rolling your own; less control than ECS/EKS. Great for small teams without dedicated DevOps.</p>` },
+
+  { id: "fargate", name: "Fargate", full: "Serverless Containers", category: "compute", icon: SVG.fargate, badge: "modern",
+    tagline: "Containers without managing instances.",
+    body: `<h4>What it is</h4><p>A launch type for ECS and EKS. You hand AWS a container, it runs. No EC2 instances to size, patch, or scale.</p>
+           <h4>When to reach for it</h4><p>You want containers but not server management. Pay per vCPU-second and GB-second.</p>
+           <h4>vs Lambda</h4><p>Use Fargate for long-running services and big workloads; Lambda for short event-driven functions.</p>` },
+
+  { id: "eks", name: "EKS", full: "Elastic Kubernetes Service", category: "compute", icon: SVG.eks, badge: "modern",
+    tagline: "Managed Kubernetes, AWS-flavored.",
+    body: `<h4>What it is</h4><p>AWS-managed Kubernetes control plane. You focus on workloads; AWS runs the masters and handles upgrades.</p>
+           <h4>vs ECS</h4><p>Choose EKS for k8s portability, deep ecosystem (Helm, Istio, ArgoCD), or existing k8s skills. Choose ECS for simplicity.</p>` },
+
+  { id: "bedrock", name: "Bedrock", full: "Foundation Models as a Service", category: "ai", icon: SVG.bedrock, badge: "modern",
+    tagline: "Frontier AI through one API.",
+    body: `<h4>What it is</h4><p>AWS's unified gateway to foundation models &mdash; Anthropic's Claude, Meta's Llama, Mistral, Amazon Nova, and more &mdash; all behind one API.</p>
+           <h4>Why it matters in 2026</h4><p>The 2026 AWS strategy is AI-everywhere. Bedrock + your VPC means private model access without leaving AWS.</p>
+           <h4>Common pattern</h4><p>RAG over your data: store docs in <em>S3 Vectors</em>, retrieve with embeddings, generate with Bedrock.</p>` },
+
+  { id: "sagemaker", name: "SageMaker", full: "End-to-end ML Platform", category: "ai", icon: SVG.sagemaker,
+    tagline: "Train, tune, deploy ML models.",
+    body: `<h4>What it is</h4><p>The full ML lifecycle: notebooks, training, hyperparameter tuning, model registries, deployment endpoints.</p>
+           <h4>vs Bedrock</h4><p>SageMaker is for building and training your <em>own</em> models. Bedrock is for using pre-trained foundation models.</p>` },
+
+  { id: "amazonq", name: "Amazon Q", full: "AI Assistant for AWS &amp; Code", category: "ai", icon: SVG.amazonq, badge: "modern",
+    tagline: "AI in your IDE, console, and chat.",
+    body: `<h4>What it is</h4><p>AWS's AI assistant family. <em>Q Developer</em> writes and reviews code in your IDE (the rebranded successor to CodeWhisperer). <em>Q Business</em> answers questions over your enterprise data.</p>
+           <h4>Why 2026</h4><p>AI-assisted development is now standard. Q Developer plugs into VS Code, JetBrains, and the AWS console.</p>` },
+
+  { id: "cloudformation", name: "CloudFormation", full: "Infrastructure as Code", category: "devtools", icon: SVG.cloudformation,
+    tagline: "Version-controlled infrastructure.",
+    body: `<h4>What it is</h4><p>Declare your infrastructure in YAML or JSON templates. CloudFormation provisions, updates, and tears down stacks reliably.</p>
+           <h4>Modern alternative</h4><p><em>AWS CDK</em> &mdash; write infrastructure in TypeScript, Python, or Go. Compiles to CloudFormation under the hood.</p>
+           <h4>Cross-cloud option</h4><p><em>Terraform</em> remains popular for multi-cloud shops.</p>` },
+
+  { id: "secrets", name: "Secrets Manager", full: "Rotate &amp; Retrieve Secrets", category: "security", icon: SVG.secrets, badge: "modern",
+    tagline: "Stop hardcoding credentials.",
+    body: `<h4>What it is</h4><p>Stores and rotates database passwords, API keys, OAuth tokens. Apps fetch them at runtime via IAM-authenticated calls.</p>
+           <h4>Why it matters</h4><p>The lab's <em>coffee_beans_for_all</em> in plaintext code is exactly what Secrets Manager solves. Automatic rotation for RDS is built in.</p>` },
+
+  { id: "cognito", name: "Cognito", full: "User Pools &amp; Identity Federation", category: "security", icon: SVG.cognito,
+    tagline: "Sign-in for your apps.",
+    body: `<h4>What it is</h4><p><em>User Pools</em> &mdash; managed user directory with sign-up, sign-in, MFA, password policies. <em>Identity Pools</em> &mdash; federated identity for AWS resource access.</p>
+           <h4>When to reach for it</h4><p>You need user accounts in your app and don't want to roll your own auth. Supports SAML, OIDC, social logins.</p>` },
+
+  { id: "step", name: "Step Functions", full: "Visual Workflow Orchestration", category: "ops", icon: SVG.step, badge: "modern",
+    tagline: "State machines for serverless.",
+    body: `<h4>What it is</h4><p>Coordinates Lambda functions, ECS tasks, and 220+ other AWS services into reliable workflows. Defined in JSON-based <em>Amazon States Language</em>.</p>
+           <h4>Why it matters</h4><p>The modern replacement for SWF and Data Pipeline. Built-in retry, error handling, parallel branches, human approval steps.</p>` },
+
+  { id: "eventbridge", name: "EventBridge", full: "Event Bus &amp; Scheduler", category: "messaging", icon: SVG.eventbridge, badge: "modern",
+    tagline: "Glue for event-driven systems.",
+    body: `<h4>What it is</h4><p>A serverless event bus. AWS services and your apps publish events; rules route them to targets. Includes a cron-like scheduler.</p>
+           <h4>vs SNS</h4><p>EventBridge has richer filtering (content-based rules), schemas, and SaaS partner integrations. SNS is simpler and faster for pure pub/sub.</p>` },
+
+  { id: "guardduty", name: "GuardDuty", full: "Threat Detection", category: "security", icon: SVG.guardduty, badge: "modern",
+    tagline: "Continuous threat monitoring.",
+    body: `<h4>What it is</h4><p>Machine-learning threat detection across CloudTrail, VPC Flow Logs, and DNS logs. Surfaces unusual API calls, port scans, crypto-mining instances.</p>
+           <h4>2026 context</h4><p>Zero-trust is the security theme of 2026. GuardDuty is the "always-watching eye" of that posture &mdash; turn it on in every account.</p>` },
+
+  { id: "s3vectors", name: "S3 Vectors", full: "Native Vector Indexing in S3", category: "ai", icon: SVG.s3vectors, badge: "new",
+    tagline: "Store embeddings where your data lives.",
+    body: `<h4>What it is</h4><p>S3's first-class vector index, generally available in 2026. Store and query the embeddings that power AI search and RAG &mdash; without running a separate vector database.</p>
+           <h4>Why it matters</h4><p>Removes the operational tax of running OpenSearch, Pinecone, or Weaviate alongside your data lake. Embed once, query forever.</p>` },
+];
+
+/* ---------------- STATE ---------------- */
+
+let state = {
+  filter: "all",
+  mode: "browse",          // "browse" | "study"
+  status: {},              // { [id]: "known" | "review" | undefined }
+  studyIndex: 0,
+  studyDeck: [],
+  studyFlipped: false,
+};
+
+/* ---------------- PERSISTENCE (IndexedDB) ---------------- */
+
+const DB_NAME = "aws-field-manual";
+const DB_VERSION = 1;
+const STORE = "progress";
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onerror = () => reject(req.error);
+    req.onsuccess = () => resolve(req.result);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORE)) {
+        db.createObjectStore(STORE, { keyPath: "id" });
+      }
+    };
+  });
+}
+
+async function saveProgress() {
+  try {
+    const db = await openDB();
+    const tx = db.transaction(STORE, "readwrite");
+    const store = tx.objectStore(STORE);
+    store.put({ id: "status", value: state.status, updatedAt: Date.now() });
+    return new Promise((res) => { tx.oncomplete = res; });
+  } catch (e) {
+    // Fall back to localStorage if IndexedDB unavailable
+    try { localStorage.setItem("aws-fm-status", JSON.stringify(state.status)); } catch (_) {}
+  }
+}
+
+async function loadProgress() {
+  try {
+    const db = await openDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction(STORE, "readonly");
+      const req = tx.objectStore(STORE).get("status");
+      req.onsuccess = () => resolve(req.result?.value || {});
+      req.onerror = () => resolve({});
+    });
+  } catch (e) {
+    try { return JSON.parse(localStorage.getItem("aws-fm-status") || "{}"); }
+    catch (_) { return {}; }
+  }
+}
+
+async function clearProgress() {
+  try {
+    const db = await openDB();
+    const tx = db.transaction(STORE, "readwrite");
+    tx.objectStore(STORE).clear();
+    await new Promise((res) => { tx.oncomplete = res; });
+  } catch (_) {}
+  try { localStorage.removeItem("aws-fm-status"); } catch (_) {}
+}
+
+/* ---------------- CLOUD SYNC STUB (DynamoDB-ready) ----------------
+   This is the seam where you'd POST to API Gateway → Lambda → DynamoDB.
+   For now it just updates the on-screen indicator. Wire it up by setting
+   window.AWS_FM_SYNC_ENDPOINT to a URL that accepts JSON: {status, ts}.
+   --------------------------------------------------------------- */
+async function cloudSync() {
+  const status = document.getElementById("sync-status");
+  const label = document.getElementById("sync-label");
+  if (!navigator.onLine) {
+    status.classList.add("offline");
+    label.textContent = "Offline · saved locally";
+    return;
+  }
+  status.classList.remove("offline");
+  label.textContent = "Saved locally";
+  if (window.AWS_FM_SYNC_ENDPOINT) {
+    try {
+      label.textContent = "Syncing…";
+      await fetch(window.AWS_FM_SYNC_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: state.status, ts: Date.now() }),
+      });
+      label.textContent = "Synced to cloud";
+    } catch (_) {
+      status.classList.add("offline");
+      label.textContent = "Sync failed · local only";
+    }
+  }
+}
+
+/* ---------------- RENDERING ---------------- */
+
+function renderFilters() {
+  const row = document.getElementById("filter-row");
+  row.innerHTML = "";
+  CATEGORIES.forEach((cat) => {
+    const count = cat.id === "all"
+      ? CARDS.length
+      : (cat.id === "modern"
+          ? CARDS.filter(c => c.badge === "modern" || c.badge === "new").length
+          : CARDS.filter(c => c.category === cat.id).length);
+    const btn = document.createElement("button");
+    btn.className = "chip" + (state.filter === cat.id ? " active" : "");
+    btn.type = "button";
+    btn.innerHTML = `${cat.name}<span class="count">${count}</span>`;
+    btn.addEventListener("click", () => {
+      state.filter = cat.id;
+      render();
+    });
+    row.appendChild(btn);
+  });
+}
+
+function visibleCards() {
+  if (state.filter === "all") return CARDS;
+  if (state.filter === "modern") return CARDS.filter(c => c.badge === "modern" || c.badge === "new");
+  return CARDS.filter(c => c.category === state.filter);
+}
+
+function renderStats() {
+  const total = CARDS.length;
+  const known = Object.values(state.status).filter(s => s === "known").length;
+  const review = Object.values(state.status).filter(s => s === "review").length;
+  const pct = total ? Math.round((known / total) * 100) : 0;
+  document.getElementById("stat-total").textContent = total;
+  document.getElementById("stat-known").textContent = known;
+  document.getElementById("stat-review").textContent = review;
+  document.getElementById("stat-pct").textContent = pct + "%";
+}
+
+function renderGrid() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  const cards = visibleCards();
+  if (!cards.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column: 1/-1;">Nothing in this section.</div>`;
+    return;
+  }
+  cards.forEach((card, i) => {
+    const status = state.status[card.id];
+    const el = document.createElement("div");
+    el.className = "card-mini" + (status === "known" ? " known" : status === "review" ? " review" : "");
+    el.style.animationDelay = (i * 30) + "ms";
+    el.innerHTML = `
+      <div class="card-mini-inner">
+        <div class="card-face front">
+          ${card.badge === "new" ? `<div class="badge-new">New · 2026</div>` : ""}
+          <div class="card-meta">
+            <span>№ ${String(CARDS.indexOf(card) + 1).padStart(3, "0")}</span>
+            <span>${categoryLabel(card.category)}</span>
+          </div>
+          <div class="card-icon">${card.icon}</div>
+          <div class="card-name">${card.name}</div>
+          <div class="card-fullname">${card.full}</div>
+          <div class="card-tagline">${card.tagline}</div>
+          ${status ? `<div class="status-mark"></div>` : ""}
+        </div>
+        <div class="card-face back">
+          <div class="card-meta">
+            <span>${card.name}</span>
+            <span>VERSO</span>
+          </div>
+          <div class="card-back-content">${card.body}</div>
+          <div class="card-tagline">Tap to flip back</div>
+        </div>
+      </div>
+    `;
+    el.addEventListener("click", () => el.classList.toggle("flipped"));
+    grid.appendChild(el);
+  });
+}
+
+function categoryLabel(id) {
+  return (CATEGORIES.find(c => c.id === id) || { name: id }).name.toUpperCase();
+}
+
+/* ---------------- STUDY MODE ---------------- */
+
+function buildStudyDeck() {
+  const visible = visibleCards();
+  // Prioritize review cards, then unseen, then known last
+  const review = visible.filter(c => state.status[c.id] === "review");
+  const unseen = visible.filter(c => !state.status[c.id]);
+  const known = visible.filter(c => state.status[c.id] === "known");
+  state.studyDeck = [...review, ...unseen, ...known];
+  state.studyIndex = 0;
+  state.studyFlipped = false;
+}
+
+function renderStudy() {
+  if (!state.studyDeck.length) buildStudyDeck();
+  if (!state.studyDeck.length) return;
+  const card = state.studyDeck[state.studyIndex];
+  if (!card) return;
+
+  document.getElementById("study-current").textContent = state.studyIndex + 1;
+  document.getElementById("study-total").textContent = state.studyDeck.length;
+  document.getElementById("study-category").textContent = categoryLabel(card.category);
+
+  const cardNo = String(CARDS.indexOf(card) + 1).padStart(3, "0");
+  document.getElementById("sf-no").textContent = "№ " + cardNo;
+  document.getElementById("sb-no").textContent = "№ " + cardNo;
+  document.getElementById("sf-cat").textContent = categoryLabel(card.category);
+  document.getElementById("sf-icon").innerHTML = card.icon;
+  document.getElementById("sf-name").textContent = card.name;
+  document.getElementById("sf-fullname").textContent = card.full;
+  document.getElementById("sf-tagline").textContent = card.tagline;
+  document.getElementById("sb-body").innerHTML = card.body;
+
+  // Reset flip
+  document.getElementById("study-card").classList.remove("flipped");
+  state.studyFlipped = false;
+
+  // Progress bar
+  const pct = ((state.studyIndex + 1) / state.studyDeck.length) * 100;
+  document.getElementById("study-bar").style.width = pct + "%";
+
+  // Disable nav at edges
+  document.getElementById("btn-prev").disabled = state.studyIndex === 0;
+  document.getElementById("btn-next").disabled = state.studyIndex === state.studyDeck.length - 1;
+}
+
+function studyMark(status) {
+  const card = state.studyDeck[state.studyIndex];
+  if (!card) return;
+  state.status[card.id] = status;
+  saveProgress().then(cloudSync);
+  renderStats();
+  // Auto-advance
+  if (state.studyIndex < state.studyDeck.length - 1) {
+    state.studyIndex++;
+    renderStudy();
+  } else {
+    // Rebuild and start over from review-priority
+    buildStudyDeck();
+    renderStudy();
+  }
+}
+
+function studyNav(dir) {
+  if (dir === "next" && state.studyIndex < state.studyDeck.length - 1) {
+    state.studyIndex++;
+  } else if (dir === "prev" && state.studyIndex > 0) {
+    state.studyIndex--;
+  } else if (dir === "skip") {
+    if (state.studyIndex < state.studyDeck.length - 1) state.studyIndex++;
+    else state.studyIndex = 0;
+  }
+  renderStudy();
+}
+
+function setMode(mode) {
+  state.mode = mode;
+  document.getElementById("mode-browse").classList.toggle("active", mode === "browse");
+  document.getElementById("mode-study").classList.toggle("active", mode === "study");
+  document.getElementById("browse-stage").style.display = mode === "browse" ? "block" : "none";
+  document.getElementById("study-stage").classList.toggle("active", mode === "study");
+  if (mode === "study") {
+    buildStudyDeck();
+    renderStudy();
+  }
+}
+
+/* ---------------- TOP-LEVEL RENDER ---------------- */
+
+function render() {
+  renderFilters();
+  renderStats();
+  if (state.mode === "browse") {
+    renderGrid();
+  } else {
+    buildStudyDeck();
+    renderStudy();
+  }
+}
+
+/* ---------------- INIT ---------------- */
+
+(async function init() {
+  state.status = await loadProgress();
+
+  document.getElementById("vol-no").textContent =
+    String(Object.values(state.status).filter(Boolean).length).padStart(2, "0");
+
+  // Mode buttons
+  document.getElementById("mode-browse").addEventListener("click", () => setMode("browse"));
+  document.getElementById("mode-study").addEventListener("click", () => setMode("study"));
+
+  // Study card flip
+  document.getElementById("study-card").addEventListener("click", (e) => {
+    // Don't flip if clicking inside scrollable back content
+    if (e.target.closest(".study-back-body") && state.studyFlipped) {
+      // allow scroll, no flip
+    }
+    document.getElementById("study-card").classList.toggle("flipped");
+    state.studyFlipped = !state.studyFlipped;
+  });
+
+  // Study controls
+  document.getElementById("btn-known").addEventListener("click", () => studyMark("known"));
+  document.getElementById("btn-review").addEventListener("click", () => studyMark("review"));
+  document.getElementById("btn-prev").addEventListener("click", () => studyNav("prev"));
+  document.getElementById("btn-next").addEventListener("click", () => studyNav("next"));
+  document.getElementById("btn-skip").addEventListener("click", () => studyNav("skip"));
+
+  // Reset
+  document.getElementById("reset-btn").addEventListener("click", async () => {
+    if (confirm("Clear all study progress? This cannot be undone.")) {
+      state.status = {};
+      await clearProgress();
+      cloudSync();
+      render();
+    }
+  });
+
+  // Keyboard shortcuts (study mode)
+  document.addEventListener("keydown", (e) => {
+    if (state.mode !== "study") return;
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+    if (e.key === " " || e.key === "Enter") {
+      e.preventDefault();
+      document.getElementById("study-card").click();
+    } else if (e.key === "ArrowRight") {
+      studyNav("next");
+    } else if (e.key === "ArrowLeft") {
+      studyNav("prev");
+    } else if (e.key.toLowerCase() === "k") {
+      studyMark("known");
+    } else if (e.key.toLowerCase() === "r") {
+      studyMark("review");
+    } else if (e.key.toLowerCase() === "s") {
+      studyNav("skip");
+    }
+  });
+
+  // Online/offline indicator
+  window.addEventListener("online", cloudSync);
+  window.addEventListener("offline", cloudSync);
+
+  render();
+  cloudSync();
+})();
+</script>
+
+</body>
+</html>
